@@ -7,63 +7,63 @@ st.set_page_config(page_title="Burhanettin's Place - Admin Control", page_icon="
 def classify_comment(text):
     text = text.lower()
     # Kötü sözler filtresi (Örnektir, genişletilebilir)
-    bad_words = ["kötü", "çirkin", "aptal", "spam"] 
+    bad_words = ["bad", "disgusting", "stupid", "spam"] 
     # Destek ve Kahve filtresi
-    coffee_words = ["kahve", "coffee", "ısmarlar", "destek", "support"]
+    coffee_words = ["advice", "coffee", "offers", "support", "support"]
     # Tavsiye filtresi
-    advice_words = ["tavsiye", "öneri", "should", "suggest"]
+    advice_words = ["advice", "öneri", "should", "suggest"]
 
     if any(word in text for word in bad_words):
-        return "⚠️ Karantina (Kötü Söz)"
+        return "⚠️ Quarantine (bad words)"
     elif any(word in text for word in coffee_words):
-        return "☕ Kahve & Destek"
+        return "☕ Coffee & Support"
     elif any(word in text for word in advice_words):
-        return "💡 Tavsiye/Öneri"
+        return "💡 Advice"
     else:
-        return "✅ Genel/Beğeni"
+        return "✅ like"
 
 # --- 2. VERİ SAKLAMA ---
 if 'posts' not in st.session_state:
     st.session_state.posts = [
-        {"user": "Burhanettin", "content": "EVEYES 360 vizyonu ile büyüyoruz!", "category": "✅ Genel/Beğeni", "likes": 500}
+        {"user": "Burhanettin", "content": "büyüyoruz!", "category": "✅ like", "likes": 500}
     ]
 
 # --- 3. ARAYÜZ ---
 st.title("🚀 Burhanettin's Place")
-st.sidebar.title("Yönetim Paneli")
-app_mode = st.sidebar.selectbox("Bölüm Seçin", ["Ana Akış", "Yönetici Arşivi (1M Veri Yönetimi)"])
+st.sidebar.title("Admin Panel")
+app_mode = st.sidebar.selectbox("Select Sections", ["Main Stream", "Admin's Archive"])
 
-if app_mode == "Ana Akış":
+if app_mode == "Main Stream":
     with st.form("post_form"):
-        user = st.text_input("Kullanıcı Adı")
-        content = st.text_area("Yorumunuz")
-        submitted = st.form_submit_button("Paylaş")
+        user = st.text_input("User Name")
+        content = st.text_area("Comments")
+        submitted = st.form_submit_button("Share")
         
         if submitted and user and content:
             cat = classify_comment(content) # Yorumu otomatik sınıflandır
             st.session_state.posts.append({"user": user, "content": content, "category": cat, "likes": 0})
-            st.success(f"Yorumunuz '{cat}' olarak işaretlendi ve paylaşıldı!")
+            st.success(f"Your Comments'{cat}' shared!")
 
-    st.subheader("📱 Canlı Akış")
+    st.subheader("📱 Main Stream")
     for post in st.session_state.posts:
         if post['category'] != "⚠️ Karantina (Kötü Söz)": # Kötüleri akışta gösterme
             st.write(f"**@{post['user']}**: {post['content']} | {post['category']}")
             st.divider()
 
-elif app_mode == "Yönetici Arşivi (1M Veri Yönetimi)":
-    st.header("📊 Yorum Arşivi ve Moderasyon")
+elif app_mode == "Admin's Archive":
+    st.header("📊 Comments Archive")
     
     # Kategorilere göre filtreleme
-    target_cat = st.selectbox("Görüntülenecek Grup", ["Hepsi", "⚠️ Karantina (Kötü Söz)", "☕ Kahve & Destek", "💡 Tavsiye/Öneri", "✅ Genel/Beğeni"])
+    target_cat = st.selectbox("Görüntülenecek Grup", ["All", "⚠️ Quarantine (bad words)", "☕Coffee & Support", "💡 Advice", "✅ like"])
     
     for i, post in enumerate(st.session_state.posts):
-        if target_cat == "Hepsi" or post['category'] == target_cat:
+        if target_cat == "All" or post['category'] == target_cat:
             col1, col2 = st.columns([4, 1])
             col1.write(f"**{post['user']}**: {post['content']} ({post['category']})")
-            if col2.button("Sil", key=f"del_{i}"):
+            if col2.button("Delete", key=f"del_{i}"):
                 st.session_state.posts.pop(i)
                 st.rerun()
 
-    if st.button("Karantinadaki Tüm Yorumları Temizle"):
-        st.session_state.posts = [p for p in st.session_state.posts if p['category'] != "⚠️ Karantina (Kötü Söz)"]
-        st.success("Tüm kötü yorumlar silindi!")
+    if st.button("Delete All the Comments"):
+        st.session_state.posts = [p for p in st.session_state.posts if p['category'] != "⚠️ Quarantine (bad words)"]
+        st.success("All the comments deleted!")
