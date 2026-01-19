@@ -25,7 +25,7 @@ def classify_comment(text):
 # --- 2. VERİ SAKLAMA ---
 if 'posts' not in st.session_state:
     st.session_state.posts = [
-        {"user": "Burhanettin", "content": "büyüyoruz!", "category": "✅ like", "likes": 500}
+        {"user": "Burhanettin", "content": "Growing Fast!", "category": "✅ like", "likes": 500}
     ]
 
 # --- 3. ARAYÜZ ---
@@ -46,7 +46,7 @@ if app_mode == "Main Stream":
 
     st.subheader("📱 Main Stream")
     for post in st.session_state.posts:
-        if post['category'] != "⚠️ Karantina (Kötü Söz)": # Kötüleri akışta gösterme
+        if post['category'] != "⚠️ Quarantine (bad words)" # Kötüleri akışta gösterme
             st.write(f"**@{post['user']}**: {post['content']} | {post['category']}")
             st.divider()
 
@@ -54,7 +54,7 @@ elif app_mode == "Admin's Archive":
     st.header("📊 Comments Archive")
     
     # Kategorilere göre filtreleme
-    target_cat = st.selectbox("Görüntülenecek Grup", ["All", "⚠️ Quarantine (bad words)", "☕Coffee & Support", "💡 Advice", "✅ like"])
+    target_cat = st.selectbox("All the Group", ["All", "⚠️ Quarantine (bad words)", "☕Coffee & Support", "💡 Advice", "✅ like"])
     
     for i, post in enumerate(st.session_state.posts):
         if target_cat == "All" or post['category'] == target_cat:
