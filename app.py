@@ -46,7 +46,7 @@ if app_mode == "Main Stream":
 
     st.subheader("📱 Main Stream")
     for post in st.session_state.posts:
-        if post['category'] != "⚠️ Quarantine (bad words)" # Kötüleri akışta gösterme
+        if post['category'] != "⚠️ Quarantine (bad words)": # Kötüleri akışta gösterme
             st.write(f"**@{post['user']}**: {post['content']} | {post['category']}")
             st.divider()
 
