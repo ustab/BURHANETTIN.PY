@@ -51,7 +51,7 @@ if app_mode == "Main Stream":
             st.divider()
 
 elif app_mode == "Admin's Archive":
-    st.header("📊 Comments Archive")
+    st.header("📊 Comment Archive")
     
     # Kategorilere göre filtreleme
     target_cat = st.selectbox("All the Group", ["All", "⚠️ Quarantine (bad words)", "☕Coffee & Support", "💡 Advice", "✅ like"])
